@@ -1,0 +1,247 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{setspace}
+
+
+\geometry{margin=1in}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}{Remark}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\W}{\mathcal{W}}
+\newcommand{\lhat}{\hat{\lambda}}
+\newcommand{\ghat}{\hat{\gamma}}
+\newcommand{\Psihat}{\hat{\Psi}}
+\newcommand{\Hhat}{\hat{H}}
+\newcommand{\Op}{\mathcal{O}_P}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\sups}{\sup_{t \in \T}}
+\newcommand{\SQ}{\mathcal{Q}} % square-root velocity transform
+
+\title{Asymptotic Consistency of a Karcher Mean Estimator for the Latent Deformation Model}
+\author{Technical Note\\
+	~\\
+	Cody Carroll}
+\date{Feb. 2026}
+
+\begin{document}
+\maketitle
+\doublespacing
+
+\section*{Setup and Motivation}
+
+Carroll and M\"{u}ller (2023) propose the latent deformation model (LDM)
+\begin{equation}
+  X_{ij}(t) = A_{ij}\,(\lambda \circ \Psi_j \circ H_i)(t),
+  \qquad i = 1,\ldots,n,\quad j = 1,\ldots,p,
+  \label{eq:LDM}
+\end{equation}
+where $\lambda$ is the latent curve, $\Psi_j \in \W$ are component deformation
+functions, and $H_i \in \W$ are subject-level warping functions.
+The following standardization conditions are assumed:
+\begin{align}
+  \frac{1}{p}\sum_{j=1}^p \Psi_j^{-1}(t) &= t \quad \forall\, t \in \T,
+  \label{eq:std-psi}\\
+  \mathbb{E}\, H_i^{-1}(t) &= t \quad \forall\, t \in \T.
+  \label{eq:std-H}
+\end{align}
+
+\noindent Defining the $j$th \emph{component tempo} $\gamma_j = \lambda \circ \Psi_j$,
+the normalized curves satisfy
+\[
+  X_{ij}^*(t) := \frac{X_{ij}(t)}{\|X_{ij}\|_\infty}
+  = (\gamma_j \circ H_i)(t),
+\]
+where the last equality uses the standard normalization $\|\lambda\|_\infty = 1$
+(which implies $\|\gamma_j\|_\infty = 1$ for all $j$, since warpings preserve the
+sup-norm). This is a univariate warping problem with template $\gamma_j$ for each $j$.
+
+\subsection*{Two estimators of \texorpdfstring{$\lambda$}{lambda}}
+
+\paragraph{1. A global alignment estimator }
+~\\
+For each subject $i$, select one component $Z_i = X_{i,J_i}$ uniformly at
+random ($J_i \in \{1,\ldots,p\}$, each with probability $1/p$). Align
+$\{Z_i^*\}_{i=1}^n$ via pairwise warping and average the aligned curves:
+\[
+  \lhat_{\mathrm{global}} = n^{-1}\sum_{i=1}^n (Z_i \circ \hat{D}_i^{-1})\,/\,\|Z_i\|_\infty.
+\]
+Theorem 1c of Carroll and M\"{u}ller (2023) establishes
+\[
+  \sups |\lhat_{\mathrm{global}}(t) - \lambda(t)|
+  = \Op(n^{-1/2}) + \Op(\tau_m^{1/2}) + \mathcal{O}(\eta_1^{1/2}).
+\]
+
+\paragraph{2. A component tempo Karcher mean estimator of $\lambda$}
+~\\
+The code implementation of Carroll and M\"{u}ller (2023) (\url{https://github.com/codycarroll/LDM}) also provides an option for a heuristic estimator of $\lambda$ as follows.
+After obtaining $\ghat_j$ (the estimated component tempo for each $j$,
+averaged over aligned subjects), let $F : (L^\infty(\T))^p \to L^\infty(\T)$ denote the Karcher mean functional,
+so that we can define
+$\lhat_{\mathrm{heuristic}} = F(\ghat_1,\ldots,\ghat_p)$ as the Karcher mean of the estimated component tempos. Consistency of this estimator is not established in Carroll and M\"{u}ller (2023) but the goal of this note is to sketch an argument showing that
+$\lhat_{\mathrm{heuristic}}$ achieves the same parametric rate.
+
+\section*{Population Level Identification}
+
+We first show that at the population level (i.e., replacing $\ghat_j$ with
+the true $\gamma_j$), the Karcher mean recovers $\lambda$ exactly.
+
+Let $\SQ(f)(t) = \mathrm{sgn}(f'(t))\sqrt{|f'(t)|}$ denote the square-root
+velocity (SRV) transform of a function $f \in \W$. The elastic (Fisher--Rao)
+distance between $f, g \in L^2(\T)$ is
+\[
+  d_F(f, g) = \inf_{\varphi \in \W} \|\SQ(f) - \SQ(g \circ \varphi)\|_{L^2}.
+\]
+Two functions $f$ and $g$ satisfy $d_F(f, g) = 0$ if and only if
+$g = f \circ \varphi$ for some $\varphi \in \W$; they are in the same
+equivalence class $[f]$ in the quotient space $L^2(\T)/\W$.
+
+\begin{lemma}[Population identification]
+  \label{lem:pop}
+  Suppose $\lambda$ satisfies Assumption (L1) of Carroll and M\"{u}ller (2023),
+  and the standardization condition \eqref{eq:std-psi} holds.
+  Then the SRVF Karcher mean of $\{\gamma_j = \lambda \circ \Psi_j\}_{j=1}^p$
+  is $\lambda$.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+	~\\
+  Since each $\gamma_j = \lambda \circ \Psi_j$, we have $d_F(\gamma_j, \lambda) = 0$
+  for all $j$: the infimum in the elastic distance is achieved by the warping
+  $\varphi = \Psi_j^{-1}$, which aligns $\gamma_j$ exactly to $\lambda$.
+  Hence all $\gamma_j$ belong to the same equivalence class $[\lambda]$ in
+  $L^2(\T)/\W$, and the Karcher variance $\frac{1}{p}\sum_j d_F(\cdot,\gamma_j)^2$
+  equals zero for every $\mu \in [\lambda]$.
+
+  We verify directly that $\lambda$ is a fixed point of the Karcher mean
+  iteration. Setting $\mu = \lambda$, the optimal warping aligning $\gamma_j$
+  to $\mu$ is $\varphi_j^* = \Psi_j^{-1}$, since
+  $\gamma_j(\Psi_j^{-1}(t)) = (\lambda \circ \Psi_j \circ \Psi_j^{-1})(t)
+  = \lambda(t) = \mu(t)$.
+  The updated mean is then
+  \[
+    \mu^{\mathrm{new}}
+    = \frac{1}{p}\sum_{j=1}^p \gamma_j(\Psi_j^{-1}(t))
+    = \frac{1}{p}\sum_{j=1}^p (\lambda \circ \Psi_j \circ \Psi_j^{-1})(t)
+    = \frac{1}{p}\sum_{j=1}^p \lambda(t) = \lambda(t),
+  \]
+  confirming $\lambda$ is a fixed point.
+
+  For uniqueness: since every $\mu = \lambda \circ \Psi_*$ in $[\lambda]$
+  achieves Karcher variance zero, the Karcher mean is only determined up to
+  reparametrization within $[\lambda]$ without further constraint.
+  The standardization condition~\eqref{eq:std-psi} resolves this: it specifies
+  that the $\Psi_j^{-1}$ average to the identity, which identifies $\lambda$
+  as the unique representative of $[\lambda]$ consistent with the
+  standardization. Any other representative $\lambda \circ \Psi_*$ with
+  $\Psi_* \neq \id$ would require the optimal alignment warpings
+  $\varphi_j^* = \Psi_j^{-1} \circ \Psi_*$ (which satisfy
+  $\gamma_j(\Psi_j^{-1}(\Psi_*(t))) = \lambda(\Psi_*(t)) = \mu(t)$) to
+  average to $\Psi_*$, violating~\eqref{eq:std-psi}. Under (L1), which
+  ensures $\lambda$ is non-degenerate, this representative is unique.
+\end{proof}
+
+\section*{Asymptotic Consistency}
+
+Lemma~\ref{lem:pop} shows that the target of the heuristic estimator is $\lambda$.
+It remains to transfer the convergence of $\ghat_j \to \gamma_j$ to
+$\lhat_{\mathrm{heuristic}} \to \lambda$.
+
+Let $F : (L^\infty(\T))^p \to L^\infty(\T)$ denote the Karcher mean functional,
+so that $F(\gamma_1,\ldots,\gamma_p) = \lambda$ by Lemma~\ref{lem:pop} and
+$\lhat_{\mathrm{heuristic}} = F(\ghat_1,\ldots,\ghat_p)$.
+
+\begin{theorem}[Consistency of the heuristic estimator]
+  \label{thm:heuristic}
+  Under Assumptions (L1), (L2), and (S0--S2) of Carroll and M\"{u}ller (2023),
+  with $\tau_m = m^{-(1-\delta)/3}$ for arbitrarily small $\delta > 0$,
+  \[
+    \sups |\lhat_{\mathrm{heuristic}}(t) - \lambda(t)|
+    = \Op(n^{-1/2}) + \Op(\tau_m^{1/2}) + \mathcal{O}(\eta_1^{1/2}).
+  \]
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+By Theorem 1b of Carroll and M\"{u}ller (2023), for each $j = 1,\ldots,p$,
+\begin{equation}
+  \sups |\ghat_j(t) - \gamma_j(t)|
+  = \Op(n^{-1/2}) + \Op(\tau_m^{1/2}) + \mathcal{O}(\eta_1^{1/2}).
+  \label{eq:gamma-rate}
+\end{equation}
+
+
+We claim that $F$ is Lipschitz continuous in a neighborhood of
+$(\gamma_1,\ldots,\gamma_p)$ with respect to the $\sup$-norm:
+there exists $C > 0$ such that for all $(f_1,\ldots,f_p)$ sufficiently close to
+$(\gamma_1,\ldots,\gamma_p)$,
+\begin{equation}
+  \|F(f_1,\ldots,f_p) - F(\gamma_1,\ldots,\gamma_p)\|_\infty
+  \leq C \max_{1 \leq j \leq p} \|f_j - \gamma_j\|_\infty.
+  \label{eq:lipschitz}
+\end{equation}
+This follows from the implicit function theorem applied to the fixed-point
+characterization of the Karcher mean: the fixed point equation
+$\mu = (1/p)\sum_j f_j \circ \varphi_j^*(f_j, \mu)$
+defines $\mu$ as a smooth function of $(f_1,\ldots,f_p)$ near
+$(\gamma_1,\ldots,\gamma_p,\lambda)$, provided the derivative of the
+fixed-point map is non-singular. Non-singularity follows from (L1), which
+ensures the Hessian of the Karcher variance is positive definite at $\lambda$
+(see, e.g., Bhattacharya \& Patrangenaru 2003 for the general Riemannian case;
+Srivastava \& Klassen 2016 for the SRVF setting).
+
+Combining \eqref{eq:gamma-rate} and \eqref{eq:lipschitz}, the rate immediately follows:
+\begin{align*}
+  \sups |\lhat_{\mathrm{heuristic}}(t) - \lambda(t)|
+  &= \|F(\ghat_1,\ldots,\ghat_p) - F(\gamma_1,\ldots,\gamma_p)\|_\infty \\
+  &\leq C \max_{1 \leq j \leq p} \|\ghat_j - \gamma_j\|_\infty \\
+  &= \Op(n^{-1/2}) + \Op(\tau_m^{1/2}) + \mathcal{O}(\eta_1^{1/2}).
+\end{align*}
+\end{proof}
+
+\begin{corollary}
+  Under the assumptions of Theorem~\ref{thm:heuristic}, if additionally
+  $\eta_1 \sim \mathcal{O}(n^{-1})$ and $m \gtrsim n^{\Delta(1-\delta)^{-1}}$
+  for some $\Delta > 3$, then
+  \[
+    \sups |\lhat_{\mathrm{heuristic}}(t) - \lambda(t)| = \Op(n^{-1/2}).
+  \]
+  That is, the heuristic achieves the same parametric rate as the global
+  alignment estimator.
+\end{corollary}
+
+\section*{Discussion}
+
+The argument above is largely a consequence of Theorem 1b of Carroll and M\"uller (2023) plus
+a continuity property of the Karcher mean functional. The main new ingredient
+needed for a complete proof was a precise statement of the Lipschitz continuity of the SRVF Karcher mean functional $F$ at the point
+    $(\gamma_1,\ldots,\gamma_p)$. This is a regularity result for the Karcher
+    mean on the infinite-dimensional manifold $(L^2(\T)/\W, d_F)$.
+    Results of this type are available in finite dimensions
+    (Bhattacharya \& Patrangenaru 2003) and have been extended to function
+    spaces in the SRVF context (Kurtek \& Bharath 2015; Srivastava \& Klassen
+    2016), so the main work is verifying the required curvature conditions
+    hold under (L1).
+
+
+\bigskip
+\noindent\textbf{References}\\[4pt]
+Carroll, C. \& M\"{u}ller, H.-G. (2023). Latent deformation models for
+multivariate functional data and time-warping separability.
+\textit{Biometrics}, 79(4), 3345--3358.\\[4pt]
+Bhattacharya, R. \& Patrangenaru, V. (2003). Large sample theory of intrinsic
+and extrinsic sample means on manifolds.
+\textit{Annals of Statistics}, 31(1), 1--29.\\[4pt]
+Kurtek, S. \& Bharath, K. (2015). Bayesian sensitivity analysis with the
+Fisher--Rao metric. \textit{Biometrika}, 102(3), 601--616.\\[4pt]
+Srivastava, A. \& Klassen, E. (2016). \textit{Functional and Shape Data
+Analysis}. Springer.
+
+\end{document}
