@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  18 FEB 2026 21:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  20 FEB 2026 17:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -382,7 +382,7 @@ Package rerunfilecheck Info: File `heuristic_consistency.out' has not changed.
 Here is how much of TeX's memory you used:
  9536 strings out of 473190
  145359 string characters out of 5715801
- 550081 words of memory out of 5000000
+ 549081 words of memory out of 5000000
  32680 multiletter control sequences out of 15000+600000
  567063 words of font info for 67 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -406,7 +406,7 @@ ive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive
 texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/t
 exmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/20
 25/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on heuristic_consistency.pdf (5 pages, 232043 bytes).
+Output written on heuristic_consistency.pdf (5 pages, 231974 bytes).
 PDF statistics:
  153 PDF objects out of 1000 (max. 8388607)
  106 compressed objects within 2 object streams
