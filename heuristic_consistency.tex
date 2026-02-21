@@ -84,7 +84,7 @@ Theorem 1c of Carroll and M\"{u}ller (2023) establishes
 ~\\
 The code implementation of Carroll and M\"{u}ller (2023) (\url{https://github.com/codycarroll/LDM}) also provides an option for a heuristic estimator of $\lambda$ as follows.
 After obtaining $\ghat_j$ (the estimated component tempo for each $j$,
-averaged over aligned subjects), let $F : (L^\infty(\T))^p \to L^\infty(\T)$ denote the Karcher mean functional,
+averaged over aligned subjects), let $F : (L^\infty(\T))^p \to L^\infty(\T)$ denote the Karcher mean,
 so that we can define
 $\lhat_{\mathrm{heuristic}} = F(\ghat_1,\ldots,\ghat_p)$ as the Karcher mean of the estimated component tempos. Consistency of this estimator is not established in Carroll and M\"{u}ller (2023) but the goal of this note is to sketch an argument showing that
 $\lhat_{\mathrm{heuristic}}$ achieves the same parametric rate.
@@ -155,7 +155,7 @@ Lemma~\ref{lem:pop} shows that the target of the heuristic estimator is $\lambda
 It remains to transfer the convergence of $\ghat_j \to \gamma_j$ to
 $\lhat_{\mathrm{heuristic}} \to \lambda$.
 
-Let $F : (L^\infty(\T))^p \to L^\infty(\T)$ denote the Karcher mean functional,
+Let $F : (L^\infty(\T))^p \to L^\infty(\T)$ denote the Karcher mean,
 so that $F(\gamma_1,\ldots,\gamma_p) = \lambda$ by Lemma~\ref{lem:pop} and
 $\lhat_{\mathrm{heuristic}} = F(\ghat_1,\ldots,\ghat_p)$.
 
@@ -191,7 +191,7 @@ This follows from the implicit function theorem applied to the fixed-point
 characterization of the Karcher mean: the fixed point equation
 $\mu = (1/p)\sum_j f_j \circ \varphi_j^*(f_j, \mu)$
 defines $\mu$ as a smooth function of $(f_1,\ldots,f_p)$ near
-$(\gamma_1,\ldots,\gamma_p,\lambda)$, provided the derivative of the
+$(\gamma_1,\ldots,\gamma_p)$ (with $\mu = \lambda$ at that point), provided the derivative of the
 fixed-point map is non-singular. Non-singularity follows from (L1), which
 ensures the Hessian of the Karcher variance is positive definite at $\lambda$
 (see, e.g., Bhattacharya \& Patrangenaru 2003 for the general Riemannian case;
@@ -220,15 +220,14 @@ Combining \eqref{eq:gamma-rate} and \eqref{eq:lipschitz}, the rate immediately f
 \section*{Discussion}
 
 The argument above is largely a consequence of Theorem 1b of Carroll and M\"uller (2023) plus
-a continuity property of the Karcher mean functional. The main new ingredient
-needed for a complete proof was a precise statement of the Lipschitz continuity of the SRVF Karcher mean functional $F$ at the point
+a continuity property of the Karcher mean. The main new ingredient
+needed for a complete proof was a precise statement of the Lipschitz continuity of the SRVF Karcher mean $F$ at the point
     $(\gamma_1,\ldots,\gamma_p)$. This is a regularity result for the Karcher
     mean on the infinite-dimensional manifold $(L^2(\T)/\W, d_F)$.
     Results of this type are available in finite dimensions
     (Bhattacharya \& Patrangenaru 2003) and have been extended to function
     spaces in the SRVF context (Kurtek \& Bharath 2015; Srivastava \& Klassen
-    2016), so the main work is verifying the required curvature conditions
-    hold under (L1).
+    2016).
 
 
 \bigskip
